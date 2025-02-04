@@ -13,7 +13,7 @@ class Singin extends StatefulWidget {
 class _LoginState extends State<Singin> {
   void go() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => Singup(),
+      builder: (context) =>ScreenInformation(),
     ));
   }
 

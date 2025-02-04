@@ -1,3 +1,4 @@
+import 'package:firebase/auth_sarvice.dart';
 import 'package:firebase/screen_information.dart';
 import 'package:firebase/singin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -47,7 +48,7 @@ class _LoginState extends State<Singup> {
                     "Password",
                     Icons.password,
                     isVisible1,
-                        () {
+                    () {
                       setState(() {
                         isVisible1 = !isVisible1;
                       });
@@ -57,7 +58,7 @@ class _LoginState extends State<Singup> {
                     "Password Confirmation",
                     Icons.password,
                     isVisible2,
-                        () {
+                    () {
                       setState(() {
                         isVisible2 = !isVisible2;
                       });
@@ -66,8 +67,10 @@ class _LoginState extends State<Singup> {
                   SizedBox(height: 50),
                   ElevatedButton(
                     onPressed: () {
-                      _formkey.currentState!.save();
-                      register(email!, password!);
+                      if (_formkey.currentState!.validate()) {
+                        _formkey.currentState!.save();
+                        singin();
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF15b9b4),
@@ -84,8 +87,8 @@ class _LoginState extends State<Singup> {
                       Text("Already have an account?"),
                       TextButton(
                         onPressed: go,
-                        child: Text("Sign in", style: TextStyle(color: Colors
-                            .blue)),
+                        child: Text("Sign in",
+                            style: TextStyle(color: Colors.blue)),
                       ),
                     ],
                   )
@@ -98,29 +101,71 @@ class _LoginState extends State<Singup> {
     );
   }
 
-  Future register(String email, String pass) async {
-    try {
-      final credential =
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: pass,
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      }
-    } catch (e) {
-      print(e);
+  singin() async {
+    Authprocess authprocess = await AuthService.register(email! , password!);
+    if (authprocess.isValid == true) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(authprocess.errorMsg)));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => ScreenInformation(),
+
+      ));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(authprocess.errorMsg)));
     }
   }
+
+/////////////////////////
+/////////////////////////
+/////////////////////////
+/////////////////////////
+/////////////////////////
+/////////////////////////
+/////////////////////////
+/////////////////////////
+/////////////////////////
+/////////////////////////
+
+  // Future register(String email, String pass) async {
+  //   try {
+  //     final credential =
+  //         await FirebaseAuth.instance.createUserWithEmailAndPassword(
+  //       email: email,
+  //       password: pass,
+  //     );
+  //   } on FirebaseAuthException catch (e) {
+  //     String msg = "error";
+  //     if (e.code == 'weak-password') {
+  //       print("object1");
+  //       msg = "The password provided is too weak.";
+  //     } else if (e.code == 'email-already-in-use') {
+  //       print("object2");
+  //       msg = "The account already exists for that email.";
+  //     } else if (e.code == 'invalid-email') {
+  //       print("object3");
+  //       msg = "Invalid email address";
+  //     }
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       content: Text(
+  //         msg,
+  //       ),
+  //       backgroundColor: Colors.red,
+  //     ));
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       content: Text(
+  //         e.toString(),
+  //       ),
+  //       backgroundColor: Colors.red,
+  //     ));
+  //   }
+  // }
 
   Widget buildTextField(String label, IconData icon, bool obscureText) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
-
         ///
         ///
         onSaved: (T) {
@@ -150,7 +195,6 @@ class _LoginState extends State<Singup> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
-
         ///
         ///
 
