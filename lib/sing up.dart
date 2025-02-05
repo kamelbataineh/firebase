@@ -1,7 +1,5 @@
 import 'package:firebase/auth_sarvice.dart';
-import 'package:firebase/screen_information.dart';
 import 'package:firebase/singin.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -27,73 +25,70 @@ class _LoginState extends State<Singup> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text(""),
-          backgroundColor: Colors.white54,
-        ),
-        backgroundColor: Colors.white,
-        body: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: SingleChildScrollView(
-            child: Form(
-              key: _formkey,
-              child: Column(
-                children: [
-                  SizedBox(height: 50),
-                  buildTextField("Email", Icons.email, false),
-                  buildpasswordField(
-                    "Password",
-                    Icons.password,
-                    isVisible1,
-                    () {
-                      setState(() {
-                        isVisible1 = !isVisible1;
-                      });
-                    },
-                  ),
-                  buildpasswordField(
-                    "Password Confirmation",
-                    Icons.password,
-                    isVisible2,
-                    () {
-                      setState(() {
-                        isVisible2 = !isVisible2;
-                      });
-                    },
-                  ),
-                  SizedBox(height: 50),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formkey.currentState!.validate()) {
-                        _formkey.currentState!.save();
-                        singin();
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF15b9b4),
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(""),
+        backgroundColor: Colors.white54,
+      ),
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formkey,
+            child: Column(
+              children: [
+                SizedBox(height: 50),
+                buildTextField("Email", Icons.email, false),
+                buildpasswordField(
+                  "Password",
+                  Icons.password,
+                  isVisible1,
+                  () {
+                    setState(() {
+                      isVisible1 = !isVisible1;
+                    });
+                  },
+                ),
+                // buildpasswordField(
+                //   "Password Confirmation",
+                //   Icons.password,
+                //   isVisible2,
+                //   () {
+                //     setState(() {
+                //       isVisible2 = !isVisible2;
+                //     });
+                //   },
+                // ),
+                SizedBox(height: 50),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formkey.currentState!.validate()) {
+                      _formkey.currentState!.save();
+                      signup();
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF15b9b4),
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Text("Sign up"),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Already have an account?"),
-                      TextButton(
-                        onPressed: go,
-                        child: Text("Sign in",
-                            style: TextStyle(color: Colors.blue)),
-                      ),
-                    ],
-                  )
-                ],
-              ),
+                  child: Text("Sign up"),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Already have an account?"),
+                    TextButton(
+                      onPressed: go,
+                      child:
+                          Text("Sign in", style: TextStyle(color: Colors.blue)),
+                    ),
+                  ],
+                )
+              ],
             ),
           ),
         ),
@@ -101,18 +96,18 @@ class _LoginState extends State<Singup> {
     );
   }
 
-  singin() async {
-    Authprocess authprocess = await AuthService.register(email! , password!);
+  signup() async {
+    Authprocess authprocess = await AuthService.register(email!, password!);
     if (authprocess.isValid == true) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(authprocess.errorMsg)));
+          .showSnackBar(SnackBar(content: Text("good")));
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => ScreenInformation(),
-
+        builder: (context) => Singin(),
       ));
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(authprocess.errorMsg)));
+      print("Errorrrr");
     }
   }
 

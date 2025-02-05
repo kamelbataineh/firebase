@@ -13,7 +13,7 @@ class Singin extends StatefulWidget {
 class _LoginState extends State<Singin> {
   void go() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) =>ScreenInformation(),
+      builder: (context) => ScreenInformation(),
     ));
   }
 
@@ -35,7 +35,6 @@ class _LoginState extends State<Singin> {
             child: Column(
               children: [
                 SizedBox(height: 50),
-
                 buildTextField("Email", Icons.email, false),
                 buildpasswordField(
                   "Password",
@@ -58,13 +57,16 @@ class _LoginState extends State<Singin> {
                       ),
                     ),
                     child: Text("Sign in")),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text("Don't have an account?"),
                     TextButton(
-                      onPressed: go,
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => Singup(),
+                        ));
+                      },
                       child:
                           Text("Sign up", style: TextStyle(color: Colors.blue)),
                     ),
@@ -77,7 +79,6 @@ class _LoginState extends State<Singin> {
       ),
     );
   }
-
 
   Widget buildpasswordField(String label, IconData icon, bool obscureText,
       VoidCallback toggleVisibility) {
@@ -104,11 +105,10 @@ class _LoginState extends State<Singin> {
     );
   }
 
-
   Widget buildTextField(String label, IconData icon, bool obscureText) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child:TextFormField(
+      child: TextFormField(
         obscureText: obscureText,
         decoration: InputDecoration(
           fillColor: Colors.grey[200],

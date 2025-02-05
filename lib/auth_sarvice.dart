@@ -13,13 +13,10 @@ class AuthService {
     } on FirebaseAuthException catch (e) {
       String msg = "error";
       if (e.code == 'weak-password') {
-        print("object1");
         msg = "The password provided is too weak.";
       } else if (e.code == 'email-already-in-use') {
-        print("object2");
         msg = "The account already exists for that email.";
       } else if (e.code == 'invalid-email') {
-        print("object3");
         msg = "Invalid email address";
       }
 
@@ -39,6 +36,10 @@ class AuthService {
   static logout() {
     return FirebaseAuth.instance.signOut();
   }
+//verfiy (3)
+  static verfiy() {
+    return FirebaseAuth.instance.currentUser?.emailVerified;
+  }
 }
 
 class Authprocess {
@@ -47,3 +48,30 @@ class Authprocess {
 
   Authprocess({required this.isValid, this.errorMsg = ""});
 }
+
+
+// int binarySearch(List list, int valu) {
+//   int left = 0;
+//   int right = list.length - 1;
+//
+//   while (left <= right) {
+//     int mid = (left + right) ~/ 2;
+//
+//     if (list[mid] == valu) {
+//       return mid;
+//     } else if (list[mid] < valu) {
+//       left = mid + 1;
+//     } else {
+//       right = mid - 1;
+//     }
+//   }
+//
+//   return -1;
+// }
+//
+// void main() {
+//   List<int> list = [1, 2, 3, 4, 5, 6, 7];
+//   int index = binarySearch(list, 5);
+//
+//   print(index);
+// }

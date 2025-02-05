@@ -23,7 +23,7 @@ class _SpalshscreenState extends State<Spalshscreen> {
   ///////////////////
   ///////////////////
   void initState() {
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(Duration(seconds: 2), () {
       User? user = AuthService.userState();
       if (user == null) {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -58,7 +58,8 @@ class _SpalshscreenState extends State<Spalshscreen> {
             child: Column(
               children: [
                 SizedBox(height: 50),
-                ElevatedButton(onPressed: () {}, child: Text("Yes"))
+                ElevatedButton(onPressed: () {}, child: Text("Yes")),
+                CircularProgressIndicator()//تحميل
               ],
             ),
           )),
