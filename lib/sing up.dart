@@ -99,11 +99,17 @@ class _LoginState extends State<Singup> {
   signup() async {
     Authprocess authprocess = await AuthService.register(email!, password!);
     if (authprocess.isValid == true) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("good")));
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => Singin(),
-      ));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Good")),
+      );
+
+      Future.delayed(Duration(seconds: 2), () {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => Singin(),
+          ),
+        );
+      });
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(authprocess.errorMsg)));

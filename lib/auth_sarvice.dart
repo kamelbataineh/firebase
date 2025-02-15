@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AuthService {
+  /////////////////////////
+  //Create Singup(1)
   static Future<Authprocess> register(String email, String pass) async {
     try {
       final credential =
@@ -36,9 +38,35 @@ class AuthService {
   static logout() {
     return FirebaseAuth.instance.signOut();
   }
-//verfiy (3)
+
+//verfiy (4)
   static verfiy() {
     return FirebaseAuth.instance.currentUser?.emailVerified;
+  }
+
+//Singin(5)
+  static Future<Authprocess> Login(String email, String pass) async {
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: pass
+      );
+      return Authprocess(isValid: true,);
+
+    } on FirebaseAuthException catch (e) {
+      String msg="error";
+      if (e.code == 'user-not-found') {
+        msg='No user found for that email.';
+      } else if (e.code == 'wrong-password') {
+        msg='Wrong password provided for that user.';
+      }
+      return Authprocess(isValid: false, errorMsg: msg);
+
+    }
+    catch (e) {
+      print(e);
+    }
+    return Authprocess(isValid: false, errorMsg: "error default");
   }
 }
 
@@ -48,7 +76,6 @@ class Authprocess {
 
   Authprocess({required this.isValid, this.errorMsg = ""});
 }
-
 
 // int binarySearch(List list, int valu) {
 //   int left = 0;
@@ -75,3 +102,66 @@ class Authprocess {
 //
 //   print(index);
 // }
+
+///////////////////////
+///////////////////////
+////////////فحص ////////////////
+// ElevatedButton(
+// onPressed: () {
+// if (_formkey.currentState!.validate()) {
+// _formkey.currentState!.save();
+// signup();
+// }
+// },
+/////////// تسجيل بالتحميل////////////
+// signup() async {
+//   showDialog(
+//     context: context,
+//     barrierDismissible: false,
+//     builder: (context) {
+//       return Center(
+//         child: CircularProgressIndicator(
+//           color: Color(0xFF15b9b4),
+//         ),
+//       );
+//     },
+//   );
+//
+//   Authprocess authprocess = await AuthService.register(email!, password!);
+//
+//   Navigator.of(context).pop();
+//
+//   if (authprocess.isValid == true) {
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       SnackBar(content: Text("good")),
+//     );
+//
+//     Future.delayed(Duration(seconds: 2), () {
+//       Navigator.of(context).pushReplacement(
+//         MaterialPageRoute(builder: (context) => Singin()),
+//       );
+//     });
+//   } else {
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       SnackBar(content: Text(authprocess.errorMsg)),
+//     );
+//   }
+// }
+//////////////////////////
+/////////////////////////////////
+/////////////////////////
+//////////////main()///////////////////
+// void initState() {
+//   super.initState();
+//   FirebaseAuth.instance.authStateChanges().listen((User? user) {
+//     if (user == null) {
+//       print('User is currently signed out!');
+//     } else {
+//       print('User is signed in!');
+//     }
+//   });
+// }
+//////////////////////////
+/////////////////////////////////
+/////////////////////////
+//////////////main()/////////////

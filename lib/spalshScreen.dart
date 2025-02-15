@@ -31,7 +31,7 @@ class _SpalshscreenState extends State<Spalshscreen> {
         ));
       } else {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => ScreenInformation(),
+          builder: (context) => Singin(),
         ));
       }
     });
