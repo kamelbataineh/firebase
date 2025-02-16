@@ -1,7 +1,9 @@
 import 'package:firebase/auth_sarvice.dart';
 import 'package:firebase/singin.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Singup extends StatefulWidget {
   const Singup({super.key});
@@ -77,6 +79,43 @@ class _LoginState extends State<Singup> {
                   ),
                   child: Text("Sign up"),
                 ),
+
+                /////////////////////////
+                /////////////////////////
+                /////////////////////////
+                /////////////////////////
+                /////////////////////////
+                /////////////////////////
+                // google -----------------------------------------------
+
+                //////
+                /////
+                ////
+                ///
+                //
+
+                SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+
+                    signInWithGoogle();
+                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF15b9b4),
+                    padding: EdgeInsets.symmetric(vertical: 10,horizontal: 30),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text("Sign up with Google"),
+                ),
+
+                ///
+                ///
+                ///
+                ///
+                ///
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -128,6 +167,22 @@ class _LoginState extends State<Singup> {
 /////////////////////////
 /////////////////////////
 
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
   // Future register(String email, String pass) async {
   //   try {
   //     final credential =
