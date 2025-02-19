@@ -24,6 +24,7 @@ class _LoginState extends State<Singup> {
   bool isVisible2 = true;
   String? email;
   String? password;
+  int ? Age;
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +53,8 @@ class _LoginState extends State<Singup> {
                     });
                   },
                 ),
+                buildAgeField("Age", Icons.calendar_today ,false),
+
                 // buildpasswordField(
                 //   "Password Confirmation",
                 //   Icons.password,
@@ -136,8 +139,13 @@ class _LoginState extends State<Singup> {
   }
 
   signup() async {
-    Authprocess authprocess = await AuthService.register(email!, password!);
-    if (authprocess.isValid == true) {
+    Authprocess authprocess = await AuthService.register(email!, password!,Age!);
+
+    if (!authprocess.isValid) {
+      print("Error message from AuthService: ${authprocess.errorMsg}");
+    }
+
+    if (authprocess.isValid) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Good")),
       );
@@ -152,7 +160,7 @@ class _LoginState extends State<Singup> {
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(authprocess.errorMsg)));
-      print("Errorrrr");
+      print("Error occurred: ${authprocess.errorMsg}");
     }
   }
 
@@ -281,4 +289,33 @@ class _LoginState extends State<Singup> {
       ),
     );
   }
+
+Widget buildAgeField(String label, IconData icon, bool obscureText,
+   ) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0),
+    child: TextFormField(
+      ///
+      ///
+
+      onSaved: (A) {
+        setState(() {
+          Age = int.tryParse(A ?? '') ?? 0;        });
+      },
+
+      ///
+      ///
+      obscureText: obscureText,
+      decoration: InputDecoration(
+        fillColor: Colors.grey[200],
+        filled: true,
+        labelText: label,
+        prefixIcon: Icon(icon, color: Color(0xFF15b9b4)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+    ),
+  );
+}
 }

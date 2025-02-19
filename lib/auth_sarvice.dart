@@ -1,17 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AuthService {
   /////////////////////////
   //Create Singup(1)
-  static Future<Authprocess> register(String email, String pass) async {
+  static Future<Authprocess> register(String email, String pass,int age) async {
     try {
       final credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: pass,
       );
+       FirebaseFirestore.instance.collection('userCollection').
+       doc(credential.user!.uid).
+       set({
+         'Emai':credential.user!.email,
+         'age':age,
+      });
       return Authprocess(isValid: true);
+
     } on FirebaseAuthException catch (e) {
       String msg = "error";
       if (e.code == 'weak-password') {
