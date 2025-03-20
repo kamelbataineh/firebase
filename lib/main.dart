@@ -1,3 +1,5 @@
+import 'package:firebase/image_add.dart';
+import 'package:firebase/screen_information.dart';
 import 'package:firebase/sing%20up.dart';
 import 'package:firebase/singin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -37,7 +39,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: FirebaseAuth.instance.currentUser == null ? Singin() : Singup(),
+      // home: FirebaseAuth.instance.currentUser == null ? Singin() :ImageAdd(),
+    home: ScreenInformation(),
     );
   }
 }

@@ -2,24 +2,75 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+// UI
+FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+//Future عشان منتعامل مع firebase دايمن منستخدم
+Future<bool> register(String email, String password) async {
+  try {
+    final credential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return true;
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'weak-password') {
+      print('The password provided is too weak.');
+    } else if (e.code == 'email-already-in-use') {
+      print('The account already exists for that email.');
+    }
+    return false;
+  } catch (e) {
+    print(e);
+  }
+  return false;
+}
+////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////
+Future<bool> Login(String email, String pass) async {
+  try {
+    final credential = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: pass);
+  return true;
+  }on FirebaseAuthException catch (e) {
+    if (e.code == 'weak-password') {
+      print('The password provided is too weak.');
+    } else if (e.code == 'email-already-in-use') {
+      print('The account already exists for that email.');
+    }
+    return false;
+  } catch (e) {
+    print(e);
+  }
+  return false;
+}
+////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////
 class AuthService {
   /////////////////////////
   //Create Singup(1)
-  static Future<Authprocess> register(String email, String pass,int age) async {
+  static Future<Authprocess> register(
+      String email, String pass, int age) async {
     try {
       final credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: pass,
       );
-       FirebaseFirestore.instance.collection('userCollection').
-       doc(credential.user!.uid).
-       set({
-         'Emai':credential.user!.email,
-         'age':age,
+      FirebaseFirestore.instance
+          .collection('userCollection')
+          .doc(credential.user!.uid)
+          .set({
+        'Emai': credential.user!.email,
+        'age': age,
       });
       return Authprocess(isValid: true);
-
     } on FirebaseAuthException catch (e) {
       String msg = "error";
       if (e.code == 'weak-password') {
@@ -55,23 +106,20 @@ class AuthService {
 //Singin(5)
   static Future<Authprocess> Login(String email, String pass) async {
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email,
-          password: pass
+      final credential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: pass);
+      return Authprocess(
+        isValid: true,
       );
-      return Authprocess(isValid: true,);
-
     } on FirebaseAuthException catch (e) {
-      String msg="error";
+      String msg = "error";
       if (e.code == 'user-not-found') {
-        msg='No user found for that email.';
+        msg = 'No user found for that email.';
       } else if (e.code == 'wrong-password') {
-        msg='Wrong password provided for that user.';
+        msg = 'Wrong password provided for that user.';
       }
       return Authprocess(isValid: false, errorMsg: msg);
-
-    }
-    catch (e) {
+    } catch (e) {
       print(e);
     }
     return Authprocess(isValid: false, errorMsg: "error default");

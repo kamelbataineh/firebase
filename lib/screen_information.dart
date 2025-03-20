@@ -1,5 +1,10 @@
 import 'package:firebase/Read_firebase.dart';
+import 'package:firebase/Task/CardTask.dart';
+import 'package:firebase/Task/ToDoApp.dart';
+import 'package:firebase/UI_register.dart';
 import 'package:firebase/auth_sarvice.dart';
+import 'package:firebase/image_add.dart';
+import 'package:firebase/singin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -18,9 +23,7 @@ class _ScreenInformationState extends State<ScreenInformation> {
 ///////////////////////
 
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+   return Scaffold(
         appBar: AppBar(
           title: Text(""),
           backgroundColor: Colors.white54,
@@ -34,13 +37,33 @@ class _ScreenInformationState extends State<ScreenInformation> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                          builder: (context) => AuthService.logout()),
+                      MaterialPageRoute(builder: (context) =>ImageAdd()),
                     );
                   },
-                  child: Text("Yes"),
+                  child: Text("profile"),
+                ), ElevatedButton(
+                  onPressed: () async {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) =>Todoapp()));
+                  },
+                  child: Text("Add Task"),
+                ),ElevatedButton(
+                  onPressed: () async {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) =>UiRegister()));
+                  },
+                  child: Text("Ui register"),
+                ),
+                ElevatedButton(
+                onPressed: () async {
+          await AuthService.logout();
+          Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) =>Singin()),
+          );
+          },
+                  child: Text("Log out"),
                 ),
                 SizedBox(height: 10),
                 Text("email : ${credential!.email}"),
@@ -48,9 +71,11 @@ class _ScreenInformationState extends State<ScreenInformation> {
                     "Creat :${DateFormat('MMM,d,y').format(credential!.metadata.creationTime!)}"),
                 Text(
                     "Sign-in :${DateFormat('MMM,d,y').format(credential!.metadata.lastSignInTime!)}"),
-                SizedBox(height: 10),
+                SizedBox(height: 20),
 
 
+
+                // READ FIRE BASE
                 GetReadName(
                   documentId: credential!.uid,
                 ),
@@ -58,7 +83,6 @@ class _ScreenInformationState extends State<ScreenInformation> {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }
