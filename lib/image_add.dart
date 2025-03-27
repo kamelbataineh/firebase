@@ -15,56 +15,62 @@ class ImageAdd extends StatefulWidget {
 class _ImageAddState extends State<ImageAdd> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(
-      backgroundColor: Colors.black,
-      actions: [IconButton(onPressed: (){
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) =>ScreenInformation()),
-
-        );
-      }, icon: Icon(Icons.keyboard_return))],
-    ),
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                        builder: (context) => ScreenInformation()),
+                  );
+                },
+                icon: Icon(Icons.keyboard_return))
+          ],
+        ),
         body: Center(
-      child: Column(
-
-        children: [
-          SizedBox(height: 100,),
-          ElevatedButton(
-            onPressed:(){
-              // Navigator.of(context).pushReplacement(
-              //   MaterialPageRoute(builder: (context) =>VideoAdd()),
-              //
-              // );
-            },
-            child: Text("Go Add video"),
-          ),
-          Stack(children: [
-            CircleAvatar(
-              radius: 50,
-
-              backgroundImage: ImageFile != null
-                  ? FileImage(ImageFile!)
-                  : NetworkImage("https://www.w3schools.com/w3images/avatar2.png"),
-            ),
-              Positioned(
-              bottom: 0,
-              right: 0,
-              child: CircleAvatar(
-                radius: 18,
-                backgroundColor: Colors.blue,
-                child: IconButton(
-                  icon: Icon(Icons.camera_alt, color: Colors.white, size: 18),
-                  onPressed: () {
-                    showImageOptions();
-                  },
-                ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 100,
               ),
-            ),
-          ]),
-        ],
-      ),
-
-    ));
+              ElevatedButton(
+                onPressed: () {
+                  // Navigator.of(context).pushReplacement(
+                  //   MaterialPageRoute(builder: (context) =>VideoAdd()),
+                  //
+                  // );
+                },
+                child: Text("Go Add video"),
+              ),
+              Stack(children: [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage: ImageFile != null
+                      ? FileImage(ImageFile!)
+                      : NetworkImage(
+                          "https://www.w3schools.com/w3images/avatar2.png"),
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: CircleAvatar(
+                    radius: 18,
+                    backgroundColor: Colors.blue,
+                    child: IconButton(
+                      icon:
+                          Icon(Icons.camera_alt, color: Colors.white, size: 18),
+                      onPressed: () {
+                        showImageOptions();
+                      },
+                    ),
+                  ),
+                ),
+              ]),
+            ],
+          ),
+        ));
   }
 
   void showImageOptions() {

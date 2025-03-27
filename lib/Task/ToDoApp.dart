@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase/Task/CardTask.dart';
 import 'package:firebase/Task/ShowDialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import '../screen_information.dart';
 
@@ -12,10 +14,18 @@ class Todoapp extends StatefulWidget {
 }
 
 class _TodoappState extends State<Todoapp> {
-////////////////////////////////////////
-  ///////
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  CollectionReference tasksCollection = FirebaseFirestore.instance.collection('task');
   TextEditingController addTaskController = TextEditingController();
   List<Task> allTask = [];
+
+  addTask(String name) async {
+    await tasksCollection.add({
+      'taskName': name,
+      'status': false,
+    });
+    getTasks();
+  }
 
   onChangeStuats(int index) {
     setState(() {
@@ -25,12 +35,26 @@ class _TodoappState extends State<Todoapp> {
 
   deleteItem(int index) {
     setState(() {
-      allTask.remove(allTask[index]);
+      allTask.removeAt(index);
     });
   }
 
-  ///////
-////////////////////////////////////////
+  List<QueryDocumentSnapshot> data = [];
+
+  getTasks() async {
+    QuerySnapshot querySnapshot = await tasksCollection.get();
+    setState(() {
+      data.clear();
+      data.addAll(querySnapshot.docs);
+      allTask = data.map((doc) => Task(task: doc['taskName'], isDo: doc['status'])).toList();
+    });
+  }
+
+  @override
+  void initState() {
+    getTasks();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,11 +76,12 @@ class _TodoappState extends State<Todoapp> {
                 fontSize: 40,
               )),
           Center(
-widthFactor: 3,
+            widthFactor: 3,
             child: IconButton(
                 onPressed: () {
                   Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => ScreenInformation()),
+                    MaterialPageRoute(
+                        builder: (context) => ScreenInformation()),
                   );
                 },
                 icon: Icon(Icons.keyboard_return)),
@@ -64,33 +89,51 @@ widthFactor: 3,
         ],
       ),
       body: SingleChildScrollView(
-          child: allTask.length == 0
-              ? Center(
-                  child: Text("Start Add task",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 40)),
-                )
+          child: allTask.isEmpty
+              ? ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: data.length,
+            itemBuilder: (context, index) {
+              return CardCalss(
+                  data[index]['taskName'], data[index]['status'].toString());
+            },
+          )
               : Column(
-                  children: [
-                    ...allTask
-                        .map((item) => Cardtask(
-                            taskTitle: item.task,
-                            isCheck: item.isDo,
-                            index: allTask.indexOf(item),
-                            changeFun: onChangeStuats,
-                            delete: deleteItem))
-                        .toList()
-                  ],
-                )),
+            children: [
+              ...allTask
+                  .map((item) => Cardtask(
+                  taskTitle: item.task,
+                  isCheck: item.isDo,
+                  index: allTask.indexOf(item),
+                  changeFun: onChangeStuats,
+                  delete: deleteItem))
+                  .toList()
+            ],
+          )),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(
             context: context,
             builder: (context) {
-              return ShowDialog(
-                  addTaskController: addTaskController, function: fun);
+              return AlertDialog(
+                title: Text("Add task"),
+                content: TextFormField(
+                  controller: addTaskController,
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      if (addTaskController.text.isNotEmpty) {
+                        addTask(addTaskController.text);
+                        addTaskController.clear();
+                      }
+                      Navigator.pop(context);
+                    },
+                    child: Text("Add"),
+                  )
+                ],
+              );
             },
           );
         },
@@ -100,25 +143,8 @@ widthFactor: 3,
     );
   }
 
-  ///////
-////////////////////////////////////////
-
-////////////////////////////////////////
-  ///////
-  fun() {
-    setState(() {
-      allTask.add(Task(task: addTaskController.text, isDo: false));
-    });
-  }
-
   int completedTasks() {
-    int dnoe = 0;
-    for (var i in allTask) {
-      if (i.isDo) {
-        dnoe++;
-      }
-    }
-    return dnoe;
+    return allTask.where((task) => task.isDo).length;
   }
 }
 
@@ -127,4 +153,36 @@ class Task {
   bool isDo;
 
   Task({required this.task, required this.isDo});
+}
+
+Widget CardCalss(String txt, String status) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 10),
+    child: Container(
+      height: 100,
+      child: Card(
+        color: Colors.white,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(txt),
+            ),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    status == 'true' ? Icons.check_box : Icons.check_box_outline_blank,
+                  ),
+                ),
+                IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
+              ],
+            )
+          ],
+        ),
+      ),
+    ),
+  );
 }
