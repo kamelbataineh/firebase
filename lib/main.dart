@@ -1,4 +1,5 @@
 import 'package:firebase/image_add.dart';
+import 'package:firebase/masseg/masseging.dart';
 import 'package:firebase/screen_information.dart';
 import 'package:firebase/sing%20up.dart';
 import 'package:firebase/singin.dart';
@@ -12,6 +13,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  Masseging().init();
   runApp(const MyApp());
 }
 
